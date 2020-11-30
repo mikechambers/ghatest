@@ -23,16 +23,16 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-          target: armv7-unknown-linux-gnueabihf
+          target: aarch64-unknown-linux-musl
           override: true
       - uses: actions-rs/cargo@v1
         with:
           use-cross: true
           command: build
-          args: --release --target armv7-unknown-linux-gnueabihf
+          args: --release --target aarch64-unknown-linux-musl
       - name: Build
         env:
           SOURCE_NAME: ${{ steps.branch_name.outputs.SOURCE_NAME }}
           SOURCE_BRANCH: ${{ steps.branch_name.outputs.SOURCE_BRANCH }}
           SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
-        run: strip target/armv7-unknown-linux-gnueabihf/release/ghatest && zip -j target/armv7-unknown-linux-gnueabihf/release/ghatest_armv7_$SOURCE_TAG.zip target/armv7-unknown-linux-gnueabihf/release/ghatest
+        run: strip target/aarch64-unknown-linux-musl/release/ghatest && zip -j target/aarch64-unknown-linux-musl/release/ghatest_armv7_$SOURCE_TAG.zip target/aarch64-unknown-linux-musl/release/ghatest
