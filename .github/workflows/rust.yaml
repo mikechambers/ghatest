@@ -20,7 +20,7 @@ jobs:
           override: true
 
       - name: Build
-        run: cargo build --all --release && strip target/release/ghatest && mv target/release/ghatest target/release/ghatest_amd64 && zip target/release/ghatest_amd64.zip target/release/ghatest_amd64
+        run: cargo build --all --release && strip target/release/ghatest && mv target/release/ghatest target/release/ghatest_amd64 && zip -j target/release/ghatest_amd64.zip target/release/ghatest_amd64
 
       - name: Release
         uses: softprops/action-gh-release@v1
