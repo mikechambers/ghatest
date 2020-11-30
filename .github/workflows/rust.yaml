@@ -23,16 +23,25 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-          target: aarch64-unknown-linux-musl
+          target: x86_64-unknown-linux-musl
           override: true
       - uses: actions-rs/cargo@v1
         with:
           use-cross: true
           command: build
-          args: --release --target aarch64-unknown-linux-musl
+          args: --release --target x86_64-unknown-linux-musl
       - name: Build
         env:
           SOURCE_NAME: ${{ steps.branch_name.outputs.SOURCE_NAME }}
           SOURCE_BRANCH: ${{ steps.branch_name.outputs.SOURCE_BRANCH }}
           SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
-        run: strip target/aarch64-unknown-linux-musl/release/ghatest && zip -j target/aarch64-unknown-linux-musl/release/ghatest_armv7_$SOURCE_TAG.zip target/aarch64-unknown-linux-musl/release/ghatest
+        run: strip target/x86_64-unknown-linux-musl/release/ghatest && zip -j target/x86_64-unknown-linux-musl/release/ghatest_x86_64-unknown-linux-musl_$SOURCE_TAG.zip target/x86_64-unknown-linux-musl/release/ghatest
+        
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            target/release/ghatest_x86_64-unknown-linux-musl_${{ steps.branch_name.outputs.SOURCE_TAG }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
