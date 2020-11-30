@@ -35,4 +35,4 @@ jobs:
           SOURCE_NAME: ${{ steps.branch_name.outputs.SOURCE_NAME }}
           SOURCE_BRANCH: ${{ steps.branch_name.outputs.SOURCE_BRANCH }}
           SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
-        run: ls -l target/ && ls -l && strip target/release/ghatest && zip -j target/release/ghatest_armv7_$SOURCE_TAG.zip target/release/ghatest
+        run: ls -l target/armv7-unknown-linux-gnueabihf/ strip target/armv7-unknown-linux-gnueabihf/ghatest && zip -j target/armv7-unknown-linux-gnueabihf/ghatest_armv7_$SOURCE_TAG.zip target/armv7-unknown-linux-gnueabihf/ghatest
