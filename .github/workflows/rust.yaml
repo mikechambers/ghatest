@@ -30,6 +30,11 @@ jobs:
           use-cross: true
           command: build
           args: --release --target x86_64-unknown-linux-musl
+      - uses: actions-rs/cargo@v1
+        with:
+          use-cross: true
+          command: build
+          args: --release --target x86_64-apple-darwin
       - name: Build
         env:
           SOURCE_NAME: ${{ steps.branch_name.outputs.SOURCE_NAME }}
