@@ -23,13 +23,8 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-          target: x86_64-unknown-linux-musl
+          target: x86_64-apple-darwin
           override: true
-      - uses: actions-rs/cargo@v1
-        with:
-          use-cross: true
-          command: build
-          args: --release --target x86_64-unknown-linux-musl
       - uses: actions-rs/cargo@v1
         with:
           use-cross: true
@@ -40,13 +35,13 @@ jobs:
           SOURCE_NAME: ${{ steps.branch_name.outputs.SOURCE_NAME }}
           SOURCE_BRANCH: ${{ steps.branch_name.outputs.SOURCE_BRANCH }}
           SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
-        run: strip target/x86_64-unknown-linux-musl/release/ghatest && zip -j target/x86_64-unknown-linux-musl/release/ghatest_x86_64-unknown-linux-musl_$SOURCE_TAG.zip target/x86_64-unknown-linux-musl/release/ghatest
+        run: strip target/x86_64-apple-darwin/release/ghatest && zip -j target/x86_64-apple-darwin/release/ghatest_x86_64-apple-darwin_$SOURCE_TAG.zip target/x86_64-apple-darwin/release/ghatest
         
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            target/x86_64-unknown-linux-musl/release/ghatest_x86_64-unknown-linux-musl_${{ steps.branch_name.outputs.SOURCE_TAG }}.zip
+            target/x86_64-apple-darwin/release/ghatest_x86_64-apple-darwin_${{ steps.branch_name.outputs.SOURCE_TAG }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
