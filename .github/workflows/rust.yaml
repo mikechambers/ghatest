@@ -20,16 +20,17 @@ jobs:
           override: true
 
       - name: Build
-        env:
-          TAG_NAME:${{ github.event.release.tag_name }}
         run: cargo build --all --release && strip target/release/ghatest && zip -j target/release/ghatest_amd64_$TAG_NAME.zip target/release/ghatest
+        env:
+          TAG_NAME: ${{ github.event.release.tag_name }}
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            target/release/ghatest_amd64_${{ github.event.release.tag_name }}.zip
+            target/release/ghatest_amd64_$TAG_NAME.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_NAME: ${{ github.event.release.tag_name }}
 
   
