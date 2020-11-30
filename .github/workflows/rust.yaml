@@ -18,13 +18,13 @@ jobs:
           override: true
 
       - name: Build
-        run: cargo build --all --release && strip target/release/$PROJECT_NAME && mv target/release/$PROJECT_NAME target/release/PROJECT_NAME_amd64
+        run: cargo build --release --release && strip target/release/ghatest && mv target/release/ghatest target/release/ghatest_amd64
 
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            target/release/PROJECT_NAME_amd64
+            target/release/ghatest_amd64
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
