@@ -36,7 +36,7 @@ jobs:
           SOURCE_NAME: ${{ steps.branch_name.outputs.SOURCE_NAME }}
           SOURCE_BRANCH: ${{ steps.branch_name.outputs.SOURCE_BRANCH }}
           SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
-        run: strip target/x86_64-pc-windows-gnu/release/ghatest && zip -j target/x86_64-pc-windows-gnu/release/ghatest_x86_64-pc-windows-gnu_$SOURCE_TAG.zip target/x86_64-pc-windows-gnu/release/ghatest
+        run: ls -l && strip target/x86_64-pc-windows-gnu/release/ghatest && zip -j target/x86_64-pc-windows-gnu/release/ghatest_x86_64-pc-windows-gnu_$SOURCE_TAG.zip target/x86_64-pc-windows-gnu/release/ghatest
         
       - name: Release
         uses: softprops/action-gh-release@v1
