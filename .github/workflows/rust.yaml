@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
       #set some environement variables that we can use through the rest of our
       #action
       - name: Branch name
@@ -18,34 +19,20 @@ jobs:
           echo ::set-output name=SOURCE_BRANCH::${GITHUB_REF#refs/heads/}
           echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
 
-      - name Checkout
-        uses: actions/checkout@v2
-      - name Tools
-        uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           target: armv7-unknown-linux-gnueabihf
           override: true
-      - name: Rust Builds
-        uses: actions-rs/cargo@v1
+      - uses: actions-rs/cargo@v1
         with:
           use-cross: true
           command: build
           args: --target armv7-unknown-linux-gnueabihf
-
       - name: Build
         env:
           SOURCE_NAME: ${{ steps.branch_name.outputs.SOURCE_NAME }}
           SOURCE_BRANCH: ${{ steps.branch_name.outputs.SOURCE_BRANCH }}
           SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
         run: strip target/release/ghatest && zip -j target/release/ghatest_armv7_$SOURCE_TAG.zip target/release/ghatest
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: |
-            target/release/ghatest_armv7_${{ steps.branch_name.outputs.SOURCE_TAG }}.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  
