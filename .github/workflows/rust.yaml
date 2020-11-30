@@ -29,7 +29,7 @@ jobs:
         with:
           use-cross: true
           command: build
-          args: --target armv7-unknown-linux-gnueabihf
+          args: --release --target armv7-unknown-linux-gnueabihf
       - name: Build
         env:
           SOURCE_NAME: ${{ steps.branch_name.outputs.SOURCE_NAME }}
