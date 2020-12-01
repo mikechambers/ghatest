@@ -8,7 +8,6 @@ jobs:
       runs-on: ubuntu-latest
 
       steps:
-
         #set some environement variables that we can use through the rest of our
         #action
         - name: Branch name
@@ -30,20 +29,6 @@ jobs:
             use-cross: true
             command: build
             args: --manifest-path=Cargo.toml --release --target ${{ steps.branch_name.outputs.TARGET_NAME }}
-        - name: Build
-          env:
-            SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
-            TARGET_NAME: ${{ steps.branch_name.outputs.TARGET_NAME }}
-          run: echo SOURCE_TAG ${SOURCE_TAG} && ls -l target/${TARGET_NAME}/release/ && strip target/${TARGET_NAME}/release/ghatest && zip -j dcli_${TARGET_NAME}_${SOURCE_TAG}.zip target/${TARGET_NAME}/release/ghatest
-          
-        - name: Release
-          uses: softprops/action-gh-release@v1
-          if: startsWith(github.ref, 'refs/tags/')
-          with:
-            files: |
-              dcli_${{ steps.branch_name.outputs.TARGET_NAME }}_${{ steps.branch_name.outputs.SOURCE_TAG }}.zip
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-windows-msvc:
     runs-on: windows-latest
