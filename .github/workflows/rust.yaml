@@ -42,7 +42,7 @@ jobs:
         shell: bash
 
         - name: Zip .exe
-        run: Compress-Archive -Path target/${TARGET_NAME}/release/ghatest.exe -DestinationPath dcli_${{ steps.branch_name.outputs.TARGET_NAME }}_${{ steps.branch_name.outputs.SOURCE_TAG }}.zip -CompressionLevel Optimal
+        run: Compress-Archive -Path target\${TARGET_NAME}\release\ghatest.exe -DestinationPath dcli_${{ steps.branch_name.outputs.TARGET_NAME }}_${{ steps.branch_name.outputs.SOURCE_TAG }}.zip -CompressionLevel Optimal
 
       - name: Release
         uses: softprops/action-gh-release@v1
