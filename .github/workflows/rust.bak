@@ -1,52 +1,132 @@
-build-win:
-    runs-on: windows-latest
+
+
+name: Rust
+
+on: [push]
+
+jobs:
+
+  build-windows-gnu:
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v1
 
-      - name: Install latest rust toolchain
-        uses: actions-rs/toolchain@v1
+      #set some environement variables that we can use through the rest of our
+      #action
+      - name: Branch name
+        id: branch_name
+        run: |
+          echo ::set-output name=SOURCE_NAME::${GITHUB_REF#refs/*/}
+          echo ::set-output name=SOURCE_BRANCH::${GITHUB_REF#refs/heads/}
+          echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
+
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-          default: true
+          target: x86_64-pc-windows-gnu
           override: true
-
+      - uses: actions-rs/cargo@v1
+        with:
+          use-cross: true
+          command: build
+          args: --release --target x86_64-pc-windows-gnu
       - name: Build
-        run: cargo build --all --release
-
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: target/release/ghatest.exe
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  build-mac:
-    runs-on: macos-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-
-      - name: Install latest rust toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: x86_64-apple-darwin
-          default: true
-          override: true
-
-      - name: Build for mac
-        run: cargo build --all --release && strip target/release/ghatest && mv target/release/ghatest target/release/ghatest_darwin
-
+          SOURCE_NAME: ${{ steps.branch_name.outputs.SOURCE_NAME }}
+          SOURCE_BRANCH: ${{ steps.branch_name.outputs.SOURCE_BRANCH }}
+          SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
+        run: strip target/x86_64-pc-windows-gnu/release/ghatest.exe && zip -j target/x86_64-pc-windows-gnu/release/ghatest_x86_64-pc-windows-gnu_$SOURCE_TAG.zip target/x86_64-pc-windows-gnu/release/ghatest.exe
+        
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            target/release/ghatest_darwin
+            target/x86_64-pc-windows-gnu/release/ghatest_x86_64-pc-windows-gnu_${{ steps.branch_name.outputs.SOURCE_TAG }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      #set some environement variables that we can use through the rest of our
+      #action
+      - name: Branch name
+        id: branch_name
+        run: |
+          echo ::set-output name=SOURCE_NAME::${GITHUB_REF#refs/*/}
+          echo ::set-output name=SOURCE_BRANCH::${GITHUB_REF#refs/heads/}
+          echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
+
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: x86_64-unknown-linux-musl
+          override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          use-cross: true
+          command: build
+          args: --release --target x86_64-unknown-linux-musl
+      - name: Build
+        env:
+          SOURCE_NAME: ${{ steps.branch_name.outputs.SOURCE_NAME }}
+          SOURCE_BRANCH: ${{ steps.branch_name.outputs.SOURCE_BRANCH }}
+          SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
+        run: strip target/x86_64-unknown-linux-musl/release/ghatest && zip -j target/x86_64-unknown-linux-musl/release/ghatest_x86_64-unknown-linux-musl_$SOURCE_TAG.zip target/x86_64-unknown-linux-musl/release/ghatest
+        
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            target/x86_64-unknown-linux-musl/release/ghatest_x86_64-unknown-linux-musl_${{ steps.branch_name.outputs.SOURCE_TAG }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-mac:
+    runs-on: macos-10.15
+
+    steps:
+
+      #set some environement variables that we can use through the rest of our
+      #action
+      - name: Branch name
+        id: branch_name
+        run: |
+          echo ::set-output name=SOURCE_NAME::${GITHUB_REF#refs/*/}
+          echo ::set-output name=SOURCE_BRANCH::${GITHUB_REF#refs/heads/}
+          echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
+
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: x86_64-apple-darwin
+          override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          use-cross: true
+          command: build
+          args: --release --target x86_64-apple-darwin
+      - name: Build
+        env:
+          SOURCE_NAME: ${{ steps.branch_name.outputs.SOURCE_NAME }}
+          SOURCE_BRANCH: ${{ steps.branch_name.outputs.SOURCE_BRANCH }}
+          SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
+        run: strip target/x86_64-apple-darwin/release/ghatest && zip -j target/x86_64-apple-darwin/release/ghatest_x86_64-apple-darwin_$SOURCE_TAG.zip target/x86_64-apple-darwin/release/ghatest
+        
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            target/x86_64-apple-darwin/release/ghatest_x86_64-apple-darwin_${{ steps.branch_name.outputs.SOURCE_TAG }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
