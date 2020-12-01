@@ -6,6 +6,7 @@ jobs:
 
   build-linux-x86_64:
       runs-on: ubuntu-latest
+      if: github.event_name == 'push' && !contains(github.ref, 'refs/tags/')
 
       steps:
         #set some environement variables that we can use through the rest of our
@@ -114,4 +115,3 @@ jobs:
             dcli_${{ steps.settings.outputs.TARGET_NAME }}_${{ steps.settings.outputs.SOURCE_TAG }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
