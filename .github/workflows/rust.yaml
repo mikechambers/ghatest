@@ -40,7 +40,7 @@ jobs:
           TARGET_NAME: ${{ steps.branch_name.outputs.TARGET_NAME }}
         run: echo SOURCE_TAG ${SOURCE_TAG} && ls -l target/${TARGET_NAME}/release/ && strip target/${TARGET_NAME}/release/ghatest.exe
         shell: bash
-        - name: Zip
+      - name: Zip
         run: Compress-Archive -Path target\${TARGET_NAME}\release\ghatest.exe -DestinationPath dcli_${{ steps.branch_name.outputs.TARGET_NAME }}_${{ steps.branch_name.outputs.SOURCE_TAG }}.zip -CompressionLevel Optimal
       - name: Release
         uses: softprops/action-gh-release@v1
