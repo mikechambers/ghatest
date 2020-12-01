@@ -37,7 +37,7 @@ jobs:
         env:
           SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
           TARGET_NAME: ${{ steps.branch_name.outputs.TARGET_NAME }}
-        run: echo ${SOURCE_TAG} && ls -l target/${TARGET_NAME}/release/ && strip target/${TARGET_NAME}/release/ghatest && zip -j dcli_${TARGET_NAME}_${SOURCE_TAG}.zip target/${TARGET_NAME}/release/dclia
+        run: echo SOURCE_TAG ${SOURCE_TAG} && ls -l target/${TARGET_NAME}/release/ && strip target/${TARGET_NAME}/release/ghatest && zip -j dcli_${TARGET_NAME}_${SOURCE_TAG}.zip target/${TARGET_NAME}/release/ghatest
         
       - name: Release
         uses: softprops/action-gh-release@v1
