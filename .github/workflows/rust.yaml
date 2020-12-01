@@ -38,7 +38,7 @@ jobs:
           SOURCE_BRANCH: ${{ steps.branch_name.outputs.SOURCE_BRANCH }}
           SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
           TARGET_NAME: ${{ steps.branch_name.outputs.TARGET_NAME }}
-        run: strip target/$TARGET_NAME/release/ghatest && zip -j target/$TARGET_NAME/release/ghatest_$TARGET_NAME_$SOURCE_TAG.zip target/$TARGET_NAME/release/ghatest && ls -l target/$TARGET_NAME/release/
+        run: strip target/${TARGET_NAME}/release/ghatest && zip -j target/${TARGET_NAME}/release/ghatest_${TARGET_NAME}_$SOURCE_TAG.zip target/${TARGET_NAME}/release/ghatest && ls -l target/${TARGET_NAME}/release/
         
       - name: Release
         uses: softprops/action-gh-release@v1
