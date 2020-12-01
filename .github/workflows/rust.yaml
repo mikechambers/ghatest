@@ -16,7 +16,7 @@ jobs:
       - name: Build and Test
         uses: zhxiaogg/cargo-static-build@master
         with:
-          cmd: cargo --manifest-path=Cargo.toml --release --target ${{ steps.settings.outputs.TARGET_NAME }}
+          cmd: cargo build --manifest-path=Cargo.toml --release --target ${{ steps.settings.outputs.TARGET_NAME }}
 
   build-linux-x86_64:
     runs-on: ubuntu-latest
