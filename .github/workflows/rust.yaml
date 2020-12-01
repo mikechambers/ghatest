@@ -1,9 +1,6 @@
 name: Rust
 
-on:
-  push:
-    tags:
-    - '*'
+on: [push]
 
 jobs:
 
@@ -50,7 +47,7 @@ jobs:
 
   build-windows-msvc:
     runs-on: windows-latest
-
+    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
     steps:
 
       #set some environement variables that we can use through the rest of our
@@ -94,7 +91,7 @@ jobs:
 
   build-mac-x86_64:
     runs-on: macos-10.15
-
+    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
     steps:
 
       #set some environement variables that we can use through the rest of our
